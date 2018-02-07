@@ -14,6 +14,31 @@ const {
   DB_PATH = "./db/database.db"
 } = process.env;
 
+// ROUTES
+const router = express.Router();
+
+router.use(function(req, res, next) {
+  console.log("Something is happening.");
+  next();
+});
+
+router.get("/", function(req, res) {
+  res.json({ message: "root response yay!" });
+});
+
+router.get("/films/:id/recommendations", function(req, res) {
+  res.json({ recommendations: "recommendations go here" });
+});
+
+// app.get("/films/:id/recommendations", getFilmRecommendations);
+
+//Register Routes
+app.use("/films", router);
+app.use("/films/:id/recommendations", router);
+
+// ROUTE HANDLER
+function getFilmRecommendations(req, res) {}
+
 // START SERVER
 Promise.resolve()
   .then(() =>
@@ -22,34 +47,5 @@ Promise.resolve()
   .catch(err => {
     if (NODE_ENV === "development") console.error(err.stack);
   });
-
-// ROUTES
-const router = express.Router();
-
-router.get("/", function(req, res) {
-  res.json({ message: "hooray! welcome to our api!" });
-});
-app.use("/films", router);
-app.get("/films/:id/recommendations", getFilmRecommendations);
-app.post("/films", testResponse);
-
-// ROUTE HANDLER
-function getFilmRecommendations(req, res) {
-  res.status(500).send("Not Implemented");
-  // res.status(200).send("All Good");
-  // const id = req.params.id;
-  // const details = { _id: new ObjectID(id) };
-  // db.collection("films").findOne(details, (err, item) => {
-  //   if (err) {
-  //     res.send({ error: "An error has occurred" });
-  //   } else {
-  //     res.send(item);
-  //   }
-  // });
-}
-
-function testResponse(req, res) {
-  res.send("Hello");
-}
 
 module.exports = app;
